@@ -3,11 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
     <title>Onboarding page</title>
 </head>
 <body>
     <h1>Onboarding Survey</h1>
-    <i> This is where the onboarding survey will be inserted </i>
+    <i> Welcome to Sync!! We are excited to help you with your goals and hope you find the app helpful.
+        Please complete this one-time onboarding survey that should take you less than 10 minutes in order 
+        for us to understand your relationship with energy </i>
+
+    
+    <h3>Relationship with Scheduling:</h3>
+    <select id = "scheduling" class="form-control">
+    <option>I feel stressed when there are many events (>5) scheduled on my calendar.</option>
+    <option>I am very organized</option>
+    <option>I am very spontaneous and am comfortable with change</option>
+    </select>
+
+    <h3>Mental Health</h3>
+    <i>My mental health (diagnosed or undiagnosed conditions) significantly impact my daily energy levels? </i>
+        <select id = "mentalHealth" class="form-control">
+            <option>yes</option>
+            <option>no</option>
+        </select>
+        <h3></h3>
+    <i>Optional: how does your mental health impact your energy levels (e.g. feel low energy on rainy days)</i>
+        <input class="form-control" type="text" placeholder="Please elaborate">
+
+    <h3>How events impact energy level – (1 for completely drained, 5 for full recharge)</h3>
+
+    <i>Large social events</i>
+        <p>Party/concert/rave/large dinners etc.</p>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="largeParties">
+        </div>
+        <p>Networking events</p>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="largeNetworking">
+        </div>
+
+    <i>Small social events</i>
+        <p>Friends/people familiar with</p>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="Smallfriends">
+        </div>
+        <p>New people/people less familiar with</p>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="smallNewPeople">
+        </div>
+
+    <i>Work-related Meetings</i>
+        <p>Zoom/virtual meetings</p>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="meetingsZoom">
+        </div>
+        <p>In-person meetings</p>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="meetingsInPerson">
+        </div>
+        <p>Lectures</p>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="lectures">
+        </div>
+        <p>Seminar classes</p>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="seminars">
+        </div>
+
+    <i>Other</i>
+        <!-- Homework  (add optional where user can specify difference between different classes that may stress/recharge them) -->
+        <p>Homework</p>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="homework">
+        </div>
+        <p>Extracurricular activities (add option where user can share what clubs stress/recharge them)</p>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="extracurriculars">
+        </div>
+        <p>Working out</p>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="exercise">
+        </div>
+        <p>Procrastinating/Scrolling on my phone (social media, Youtube, etc.)</p>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="procrastinating">
+        </div>
+        <p>Other</p>
+        <input class="form-control" type="text" placeholder="Please elaborate">
+
+    <h3>Lifestyle</h3>
+    <i>Sleep</i>
+        <p>How many hours of sleep do you feel is required for you to function optimally (scale 5-12)</p>
+        <div class="slidecontainer">
+            <input type="range" min="5" max="12" value="8" class="slider" id="optimalSleep" step="1">
+        </div>
+        <p>How many hours of sleep do you regularly get during the weekday (scale 5-12)</p>
+        <div class="slidecontainer">
+            <input type="range" min="5" max="12" value="8" class="slider" id="actualSleep" step="1">
+        </div>
+        <p>I consistently get enough sleep to feel rested and complete my day’s tasks</p>
+        <select class="form-control">
+            <option>yes</option>
+            <option>no</option>
+        </select>
+        <p>I take naps throughout the day, and they are necessary for me to get through my day</p>
+        <select class="form-control">
+            <option>yes</option>
+            <option>no</option>
+        </select>
+
+    <i>Physical Activity and Meditation<i>
+        <p>What type of lifestyle do you live (scale 1-5; sedentary to very active)</p>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="5" value="3" class="slider" id="lifestyle" step="1">
+        </div>
+        <p>I meditate and find it helpful in maintaining healthy levels of energy</p>
+        <select class="form-control">
+            <option>yes</option>
+            <option>no</option>
+        </select>
+
+    <i>Health Habits</i>
+        <p>Do you have any health issues that would impact your energy levels</p>
+        <input class="form-control" type="text" placeholder="Please elaborate">
+        <p>My dietary habits positively support my energy levels throughout the day</p>
+        <select class="form-control">
+            <option>yes</option>
+            <option>no</option>
+        </select>
+        <p>I rely on caffeine to keep me energized throughout the day</p>
+        <select class="form-control">
+            <option>yes</option>
+            <option>no</option>
+        </select>
+        <p># cups of coffee consumed per day (recommended is 2 cups of coffee a day for adults)</p>
+        <select class="form-control">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+        <p>I use other drugs (alcohol, marijuana, etc.) that effect my energy levels</p>
+        <select class="form-control">
+            <option>yes</option>
+            <option>no</option>
+        </select>
+
+        <!-- Optional: Goal setting – future functionality to build out for event suggestion/goal setting tabs
+            Working Out
+            Socializing
+            Self-care
+            Diet
+            Productivity
+            -->
+        
+        <h3>Event Suggestion</h3>
+        <p>What strategies do you use to recharge after draining your energy?</p>
+        <!-- Fix the dot in front of the checkboxes they look ugly -->
+        <form>
+                <ul>
+                    <li>
+                        <input type="checkbox" id="shortBreaks" name="shortBreaks" value="shortBreaks" />
+                        <label for="shortBreaks">Short breaks/rest</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="physicalActivity" name="physicalActivity" value="physicalActivity" />
+                        <label for="physicalActivity">Physical activity or exercise</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="socialInteraction" name="socialInteraction" value="socialInteraction" />
+                        <label for="socialInteraction">Social interaction</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="otherEvents" name="otherEvents" value="otherEvents" />
+                        <label for="otherEvents">Other</label>
+                            <input class="form-control" type="text" placeholder="Please elaborate">
+                    </li>
+                </ul>
+        </form>
+
+        <p>What types of physical activities do you engage in? (if interest is indicated above) </p>
+        <form>
+            <ul>
+                <li>
+                    <input type="checkbox" id="gym" name="gym" value="gym" />
+                    <label for="gym"> Gym workouts</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="outdoorActivity" name="outdoorActivity" value="outdoorActivity" />
+                    <label for="outdoorActivity">Outdoor activities (hiking, biking)</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="teamSports" name="teamSports" value="teamSports" />
+                    <label for="teamSports">Team sports</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="yogaMedication" name="yogaMedication" value="yogaMedication" />
+                    <label for="yogaMedication">Yoga/Meditation</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="otherPhysical" name="otherPhysical" value="otherPhysical" />
+                    <label for="otherPhysical">Other</label>
+                        <input class="form-control" type="text" placeholder="Please elaborate">
+                </li>
+            </ul>
+        </form>
+
+        <p>What effective strategies do you use to gain energy if you feel low-energy?</p>
+        <form>
+            <ul>
+                <li>
+                    <input type="checkbox" id="creativeHobbies" name="creativeHobbies" value="creativeHobbies" />
+                    <label for="creativeHobbies"> Creative hobbies (painting, reading, making or listening to music)</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="engagePhysical" name="engagePhysical" value="engagePhysical" />
+                    <label for="engagePhysical">Engage in physical activities (working out, walking, etc.)</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="nature" name="nature" value="nature" />
+                    <label for="nature">Spend time in nature or outdoors</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="exploring" name="exploring" value="exploring" />
+                    <label for="exploring">Exploring new places/traveling/little adventures</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="hangout" name="hangout" value="hangout" />
+                    <label for="hangout">Hang out with friends</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="sleepNapping" name="sleepNapping" value="sleepNapping" />
+                    <label for="sleepNapping">Sleep/napping</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="otherPhysical" name="otherPhysical" value="otherPhysical" />
+                    <label for="otherPhysical">Other</label>
+                        <input class="form-control" type="text" placeholder="Please elaborate">
+                </li>
+            </ul>
+        </form>
+
+
     <form action = "/dashboard" method = "GET">
         <button> Next </button>
     </form>
