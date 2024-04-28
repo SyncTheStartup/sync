@@ -1,8 +1,26 @@
 /* styles.css */
+:root {
+    --bs-text-color: #FFFFFF;
+    /*--bs-text-color: #3a3153;*/
+    --bs-font-family: 'Albert Sans', sans-serif;
+    --bs-font-weight: 400;
+    --bs-font-style: normal;
+    --bs-font-optical-sizing: auto;
+    --bs-body-line-height: auto;
+    --bs-body-text-align: auto;
+    --bs-main-font-family: "Inter", sans-serif;
+    --bs-main-font-optical-sizing: auto;
+    --bs-main-font-style: normal;
+    --bs-main-font-variation-settings:
+            "slnt" 0;
+    --bs-main-font-color: #454E93;
+}
 input[type="checkbox"] {
     display: none;
 }
-
+.gradient-background {
+    background: linear-gradient(to bottom, #454E93, #454E93);
+}
 /* Style the custom checkbox */
 input[type="checkbox"] + label::before {
     content: "";
@@ -21,18 +39,288 @@ input[type="checkbox"]:checked + label::before {
     font-size: 18px;
     line-height: 20px;
     text-align: center;
-    color: #333; /* Color of the checkmark */
+    color: #5f43b2; /* Color of the checkmark */
+}
+header{
+    background-image: linear-gradient(to right, #454E93, #454E93);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    text-align: center;
+    text-size-adjust: auto;
+    padding: 10px;
+}
+/* https://stackoverflow.com/questions/74305982/how-do-i-make-website-header-logo-to-be-full-width-on-mobile-only */
+@media screen and (max-width: 640px){
+    .header-logo img {
+        width:100%!important;
+        margin:auto;
+    }
+}
+.styled-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-family: 'Arial', sans-serif;
+    color: #ffffff;
+    background-image: linear-gradient(145deg, #6e48aa, #9d50bb);
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    text-align: center;
+    display: inline-block;
+}
+
+.styled-button:hover {
+    background-image: linear-gradient(to right, #9d50bb, #6e48aa);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    transform: translateY(-2px);
+}
+
+.styled-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.styled-dropdown {
+    width: 600px;
+    height: 40px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ffffff;
+    font-size: 16px;
+    color: #333;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212px%22%20height%3D%2212px%22%20viewBox%3D%220%200%2012%2012%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpolygon%20fill%3D%22%23333%22%20points%3D%220%200%2012%200%206%2012%22%3E%3C/polygon%3E%3C/svg%3E');    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+}
+.styled-text {
+    width: 600px;
+    height: 40px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ffffff;
+    font-size: 16px;
+    color: #333;
+    appearance: none;
+     background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+}
+.styled-text-small{
+    width:460px;
+    height:20px;
+}
+
+.styled-text-input:focus {
+    border-color: #666;
+    outline: none;
+}
+
+.styled-select:focus {
+    border-color: #666;
+}
+
+header img{
+    width: 40%;
+    height: auto;
+    padding-top: 10px;
+}
+.header-content {
+    max-width: 70%;
+    margin: 0px auto;
+    padding-bottom:10px;
+}
+.energy-matrix {
+    width: 60%;
+    margin-top: 20px;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+    border: 1px solid #2B3A67;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.energy-matrix th, .energy-matrix td {
+    padding: 10px;
+    background-color: #f4f4f4;
+    border: none;
+}
+
+.energy-matrix th:first-child, .energy-matrix td:first-child {
+    border-right: 1px solid #2B3A67;
+}
+
+.energy-matrix th:nth-child(n+2):nth-child(-n+6),
+.energy-matrix td:nth-child(n+2):nth-child(-n+6) {
+    text-align: center;
+}
+
+.energy-matrix tr:nth-child(even) td {
+    background-color: #A8AEDE;
+}
+
+.energy-matrix tr:first-child th:first-child {
+    border-top-left-radius: 10px;
+}
+.energy-matrix tr:first-child th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.energy-matrix tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+.energy-matrix tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+.energy-matrix input[type='radio'] {
+    transform: scale(1.5);
+    margin: 10px;
+}
+
+.sleep-question-range {
+    -webkit-appearance: none;
+    width: 60%;
+    height: 8px;
+    border-radius: 5px;
+    background: var(--bs-main-font-color);
+    outline: none;
+}
+
+.sleep-question-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 2px solid var(--bs-main-font-color);
+    cursor: pointer;
+}
+
+.sleep-question-range::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 2px solid var(--bs-main-font-color);
+    cursor: pointer;
+}
+
+.sleep-question-range:focus::-moz-range-thumb {
+    border-color: #666;
+}
+
+.sleep-question-labels {
+    text-align: left;
+    width: 100%;
+    display: block;
+}
+
+.sleep-question-labels .range-labels {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 59.2%;
+    margin-left: 0;
+    font-size: 12px;
+    color: var(--bs-main-font-color);
+    font-family: var(--bs-main-font-family);
+    padding-left: 7.5px;
+}
+.sleep-question-label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--bs-main-font-color);
+    font-family: var(--bs-main-font-family);
+    font-size: 16px;
+    text-align: center;
+}
+.checkbox-label {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--bs-main-font-color);
+    font-family: var(--bs-main-font-family);
+    line-height: 20px;
+    user-select: none;
+}
+.checkbox-input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkbox-custom {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #FFFFFF;
+    border: 2px solid var(--bs-main-font-color);
+    border-radius: 4px;
+}
+
+.checkbox-input:checked ~ .checkbox-custom {
+    background-color: var(--bs-main-font-color);
+}
+
+.checkbox-custom:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-input:checked ~ .checkbox-custom:after {
+    display: block;
+}
+
+.checkbox-custom:after {
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid #FFFFFF;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 
 body {
+    font-family: var(--bs-font-family);
+    font-weight: var(--bs-font-weight);
     margin: 0;
-    font-family: var(--bs-body-font-family);
-    font-size: var(--bs-body-font-size);
-    font-weight: var(--bs-body-font-weight);
     line-height: var(--bs-body-line-height);
-    color: var(--bs-body-color);
+    color: var(--bs-text-color);
     text-align: var(--bs-body-text-align);
-    background-color: var(--bs-body-bg);
+    background-color: #FFFFFF;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
+    /*background: linear-gradient(to bottom, #FBD3E9, #BB377D);*/
+}
+main {
+    background-color: #FFFFFF;
+    margin: 0;
+    font-family: var(--bs-main-font-family);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    color: var(--bs-main-font-color);
+    padding: 20px;
 }
