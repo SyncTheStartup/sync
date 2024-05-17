@@ -1,20 +1,76 @@
-/* styles.css */
+@import url('https://fonts.googleapis.com/css2?family=Albert+Sans:ital@0;1&family=Noto+Sans+JP:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
 :root {
     --bs-text-color: #FFFFFF;
-    /*--bs-text-color: #3a3153;*/
     --bs-font-family: 'Albert Sans', sans-serif;
     --bs-font-weight: 400;
     --bs-font-style: normal;
     --bs-font-optical-sizing: auto;
     --bs-body-line-height: auto;
     --bs-body-text-align: auto;
-    --bs-main-font-family: "Inter", sans-serif;
+    --bs-main-font-family: 'Inter', sans-serif;
     --bs-main-font-optical-sizing: auto;
     --bs-main-font-style: normal;
-    --bs-main-font-variation-settings:
-            "slnt" 0;
+    --bs-main-font-variation-settings: "slnt" 0;
     --bs-main-font-color: #454E93;
 }
+
+body {
+    font-family: var(--bs-font-family);
+    font-weight: var(--bs-font-weight);
+    margin: 0;
+    line-height: var(--bs-body-line-height);
+    color: var(--bs-text-color);
+    text-align: var(--bs-body-text-align);
+    background-color: #FFFFFF;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+header {
+    background-image: linear-gradient(to right, #454E93, #454E93);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    text-align: center;
+    padding: 10px;
+}
+
+.header-content {
+    max-width: 70%;
+    margin: 0px auto;
+    padding-bottom: 10px;
+}
+
+.styled-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-family: var(--bs-main-font-family);
+    color: #ffffff;
+    background-image: linear-gradient(145deg, #6e48aa, #9d50bb);
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    text-align: center;
+    display: inline-block;
+}
+
+.styled-button:hover {
+    background-image: linear-gradient(to right, #9d50bb, #6e48aa);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.styled-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 input[type="checkbox"] {
     display: none;
 }
@@ -41,48 +97,13 @@ input[type="checkbox"]:checked + label::before {
     text-align: center;
     color: #5f43b2; /* Color of the checkmark */
 }
-header{
-    background-image: linear-gradient(to right, #454E93, #454E93);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    text-align: center;
-    text-size-adjust: auto;
-    padding: 10px;
-}
+
 /* https://stackoverflow.com/questions/74305982/how-do-i-make-website-header-logo-to-be-full-width-on-mobile-only */
 @media screen and (max-width: 640px){
     .header-logo img {
         width:100%!important;
         margin:auto;
     }
-}
-.styled-button {
-    padding: 12px 24px;
-    font-size: 16px;
-    font-family: 'Arial', sans-serif;
-    color: #ffffff;
-    background-image: linear-gradient(145deg, #6e48aa, #9d50bb);
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    outline: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
-    text-align: center;
-    display: inline-block;
-}
-
-.styled-button:hover {
-    background-image: linear-gradient(to right, #9d50bb, #6e48aa);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-    transform: translateY(-2px);
-}
-
-.styled-button:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .styled-dropdown {
@@ -134,11 +155,7 @@ header img{
     height: auto;
     padding-top: 10px;
 }
-.header-content {
-    max-width: 70%;
-    margin: 0px auto;
-    padding-bottom:10px;
-}
+
 .energy-matrix {
     width: 60%;
     margin-top: 20px;
@@ -303,18 +320,7 @@ header img{
     transform: rotate(45deg);
 }
 
-body {
-    font-family: var(--bs-font-family);
-    font-weight: var(--bs-font-weight);
-    margin: 0;
-    line-height: var(--bs-body-line-height);
-    color: var(--bs-text-color);
-    text-align: var(--bs-body-text-align);
-    background-color: #FFFFFF;
-    -webkit-text-size-adjust: 100%;
-    -webkit-tap-highlight-color: transparent;
-    /*background: linear-gradient(to bottom, #FBD3E9, #BB377D);*/
-}
+
 main {
     background-color: #FFFFFF;
     margin: 0;
