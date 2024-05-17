@@ -206,7 +206,6 @@ header img{
 }
 
 .sleep-question-range {
-    -webkit-appearance: none;
     width: 60%;
     height: 8px;
     border-radius: 5px;
