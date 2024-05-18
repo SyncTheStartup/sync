@@ -1,0 +1,33 @@
+# short_breaks = request.form['shortBreaks']
+
+# physical_activity = request.form['physicalActivity']
+
+# social_interaction = request.form['socialInteraction']
+
+# other_events = request.form['otherEvents']
+
+# gym = request.form['gym']
+
+# outdoor_activity = request.form['outdoorActivity']
+
+# team_sports = request.form['teamSports']
+
+# yoga_meditation = request.form['yogaMeditation']
+
+# other_physical = request.form['otherPhysical']
+
+# creative_hobbies = request.form['creativeHobbies']
+
+# engage_physical = request.form['engagePhysical']
+
+# nature = request.form['nature']
+
+# exploring = request.form['exploring']
+
+# hangout = request.form['hangout']
+
+# sleep_napping = request.form['sleepNapping']
+
+# other_energy = request.form['otherEnergy']
+
+
