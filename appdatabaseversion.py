@@ -7,6 +7,8 @@ from datetime import datetime, timedelta
 import json
 from google.oauth2.credentials import Credentials
 import logging
+from goalsetting import sorting_days
+from calculations import calculate_average_score
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
@@ -48,7 +50,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS users (
 conn.commit()
 
 scopes = [
-    'https://www.googleapis.com/auth/calendar.readonly'
+    'https://www.googleapis.com/auth/calendar'
 ]
 
 # Define the flow globally
@@ -65,27 +67,6 @@ def get_google_calendar_url(credentials):
     primary_calendar_id = next((item['id'] for item in calendar_list['items'] if item.get('primary')), None)
     return f"https://calendar.google.com/calendar/embed?src={primary_calendar_id}&mode=WEEK"
 
-def calculate_weight(duration):
-    if duration >= timedelta(hours=2):
-        return 40
-    elif timedelta(hours=1) <= duration < timedelta(hours=2):
-        return 25
-    elif duration < timedelta(hours=1):
-        return 10
-
-# Function to calculate the average score for all events
-def calculate_average_score(events):
-    # print("average score being called")
-    total_score = 0
-    count = 0
-    for event in events:
-        start_time = event.get('start', {}).get('dateTime')
-        end_time = event.get('end', {}).get('dateTime')
-        if start_time and end_time:
-            total_score += calculate_weight(datetime.fromisoformat(end_time) - datetime.fromisoformat(start_time))
-            count += 1
-    # print(total_score / count if count > 0 else 0)
-    return total_score / count if count > 0 else 0
 
 @app.route('/')
 def index():
