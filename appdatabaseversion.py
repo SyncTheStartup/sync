@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, session,g
 import sqlite3
+from google.auth.exceptions import RefreshError
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 from datetime import datetime, timedelta
@@ -233,30 +234,64 @@ def dashboard():
         scopes=credentials_info['scopes']
     )
 
-    service = build('calendar', 'v3', credentials=credentials)
-    calendar_list = service.calendarList().list().execute()
-    primary_calendar_id = next((item['id'] for item in calendar_list['items'] if item.get('primary')), None)
+    # service = build('calendar', 'v3', credentials=credentials)
+    # calendar_list = service.calendarList().list().execute()
+    # primary_calendar_id = next((item['id'] for item in calendar_list['items'] if item.get('primary')), None)
     
-    # Get events for the current week
-    start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
-    end_of_week = start_of_week + timedelta(days=7)
-    events_result = service.events().list(
-        calendarId=primary_calendar_id,
-        timeMin=start_of_week.isoformat() + 'T00:00:00Z',
-        timeMax=end_of_week.isoformat() + 'T23:59:59Z',
-        singleEvents=True,
-        orderBy='startTime'
-    ).execute()
-    events = events_result.get('items', [])
+    # # Get events for the current week
+    # start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
+    # end_of_week = start_of_week + timedelta(days=7)
+    # events_result = service.events().list(
+    #     calendarId=primary_calendar_id,
+    #     timeMin=start_of_week.isoformat() + 'T00:00:00Z',
+    #     timeMax=end_of_week.isoformat() + 'T23:59:59Z',
+    #     singleEvents=True,
+    #     orderBy='startTime'
+    # ).execute()
+    # events = events_result.get('items', [])
 
-    # Calculate the average score for events in the current week
-    average_score = calculate_average_score(events)
+    try:
+        service = build('calendar', 'v3', credentials=credentials)
 
-    # Get Google Calendar URL
-    google_calendar_url = get_google_calendar_url(credentials)
+        # Get all calendars in the user's account
+        calendar_list = service.calendarList().list().execute()
 
-    return render_template('dashboard.html', google_calendar_url=google_calendar_url, average_score=average_score)
+        # Get all events from selected calendars for the current week
+        start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
+        end_of_week = start_of_week + timedelta(days=7)
 
+        all_events = []
+        for calendar in calendar_list['items']:
+            if calendar.get('selected'):
+                calendar_id = calendar['id']
+                events_result = service.events().list(
+                    calendarId=calendar_id,
+                    timeMin=start_of_week.isoformat() + 'T00:00:00Z',
+                    timeMax=end_of_week.isoformat() + 'T23:59:59Z',
+                    singleEvents=True,
+                    orderBy='startTime'
+                ).execute()
+                events = events_result.get('items', [])
+                all_events.extend(events)
+
+        # Calculate the average score for events in the current week
+        average_score = calculate_average_score(all_events)
+
+        # Get Google Calendar URL
+        google_calendar_url = get_google_calendar_url(credentials)
+
+        return render_template('dashboard.html', google_calendar_url=google_calendar_url, average_score=average_score)
+
+    except RefreshError:
+        return redirect(url_for('index'))  # Redirect to index if credentials need to be refreshed
+
+    # # Calculate the average score for events in the current week
+    # average_score = calculate_average_score(events)
+
+    # # Get Google Calendar URL
+    # google_calendar_url = get_google_calendar_url(credentials)
+
+    # return render_template('dashboard.html', google_calendar_url=google_calendar_url, average_score=average_score)
 
 
 if __name__ == '__main__':

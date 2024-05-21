@@ -41,6 +41,41 @@
         .average-score {
             margin-top: 10px; /* Add space between battery and score */
         }
+        .goal-button {
+            margin-top: 20px; /* Add space above the button */
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); 
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 50%;
+            min-width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -52,5 +87,70 @@
         <span class="average-score">Average Score for Current Week: {{ average_score }}</span>
     </div>
     <iframe src="{{ google_calendar_url }}" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+
+    <button class="goal-button" onclick="openGoalPopup()">Set a Goal</button>
+
+    <div id="goalPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closeGoalPopup()">&times;</span>
+            <h2>Set a Goal</h2>
+            <form id="goalForm" action="/set_goal" method="POST">
+                <label for="goal">Intended Goal:</label><br>
+                <input type="text" id="goal" name="goal" placeholder="Exercise, Study, etc." required><br><br>
+                
+                <label for="endDate">End Date of Goal:</label><br>
+                <input type="date" id="endDate" name="endDate" required><br><br>
+                           
+                <label>Start Time - End Time:</label><br>
+                <input type="time" id="startTime" name="startTime" required>
+                <span> - </span>
+                <input type="time" id="endTime" name="endTime" required><br><br>
+                <label for="days">Days:</label><br>
+                
+                <label for="days">Days:</label><br>
+                <div>
+                    <input type="checkbox" id="day_mon" name="days" value="Mon">
+                    <label for="day_mon">Mon</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="day_tue" name="days" value="Tue">
+                    <label for="day_tue">Tue</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="day_wed" name="days" value="Wed">
+                    <label for="day_wed">Wed</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="day_thu" name="days" value="Thu">
+                    <label for="day_thu">Thu</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="day_fri" name="days" value="Fri">
+                    <label for="day_fri">Fri</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="day_sat" name="days" value="Sat">
+                    <label for="day_sat">Sat</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="day_sun" name="days" value="Sun">
+                    <label for="day_sun">Sun</label>
+                </div><br>
+                
+                <input type="submit" value="Set Goal">
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        function openGoalPopup() {
+            document.getElementById("goalPopup").style.display = "flex";
+        }
+        
+        function closeGoalPopup() {
+            document.getElementById("goalPopup").style.display = "none";
+        }
+    </script>
+
 </body>
 </html>
