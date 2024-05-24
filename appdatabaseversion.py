@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, session,g
+from flask import Flask, render_template, redirect, url_for, request, session, g
 import sqlite3
 from google.auth.exceptions import RefreshError
 from google_auth_oauthlib.flow import Flow
@@ -45,6 +45,18 @@ c.execute('''CREATE TABLE IF NOT EXISTS users (
                 caffeine TEXT,
                 coffee NUMBER,
                 drugs TEXT
+            )
+        ''')
+
+# Create table for goals if not exists
+c.execute('''CREATE TABLE IF NOT EXISTS goals (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                email TEXT,
+                goal TEXT,
+                end_date TEXT,
+                start_time TEXT,
+                end_time TEXT,
+                days TEXT
             )
         ''')
 conn.commit()
@@ -103,6 +115,11 @@ def login():
         'scopes': credentials_dict.get('scope')
     })
 
+    # Get user's email
+    service = build('oauth2', 'v2', credentials=credentials)
+    user_info = service.userinfo().get().execute()
+    session['email'] = user_info['email']  # Store email in session
+
     # Redirect to onboarding
     return redirect(url_for('onboarding'))
 
@@ -133,55 +150,30 @@ def onboarding():
     print("route:", request.method)
 
     if request.method == 'POST':
-
         email = request.form.get('email')
-
         scheduling = request.form.get('scheduling')
-
         mental_health = request.form.get('mentalHealth')
-
         large_parties = request.form['Party/Concert/Rave/Large Dinners etc']
-
         networking_events = request.form['Networking Events']
-
         friends_familiar = request.form['Friend/people familiar with']
-
         zoom_meetings = request.form['Zoom/Virtual Meetings']
-
         in_person_meetings = request.form['In-Person Meetings']
-
         lectures = request.form['Lectures']
-
         seminar_classes = request.form['Seminar Classes']
-
         homework = request.form['Homework']
-
         extra_activities = request.form['Extracurricular Activities (add option where user can share what clubs stress/recharge them)']
-
         working_out = request.form['Working Out']
-
         procrastinating = request.form['Procrastinating']
-
         sleep_hours_req = request.form['sleepHoursreq']
-
         sleep_hours_reg = request.form['sleepHoursreg']
-
         sleep = request.form['sleep']
-
         naps = request.form['naps']
-
         activeness = request.form['activeness']
-
         meditation = request.form['meditation']
-
         health_issues = request.form['healthIssues']
-
         dietary = request.form['dietary']
-
         caffeine = request.form['caffeine']
-
         coffee = request.form['coffee']
-
         drugs = request.form['drugs']
 
         g.db.execute('INSERT INTO users (email, scheduling, mental_health, large_parties, networking_events, friends_familiar, zoom_meetings, \
@@ -214,22 +206,6 @@ def dashboard():
         client_secret=credentials_info['client_secret'],
         scopes=credentials_info['scopes']
     )
-
-    # service = build('calendar', 'v3', credentials=credentials)
-    # calendar_list = service.calendarList().list().execute()
-    # primary_calendar_id = next((item['id'] for item in calendar_list['items'] if item.get('primary')), None)
-    
-    # # Get events for the current week
-    # start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
-    # end_of_week = start_of_week + timedelta(days=7)
-    # events_result = service.events().list(
-    #     calendarId=primary_calendar_id,
-    #     timeMin=start_of_week.isoformat() + 'T00:00:00Z',
-    #     timeMax=end_of_week.isoformat() + 'T23:59:59Z',
-    #     singleEvents=True,
-    #     orderBy='startTime'
-    # ).execute()
-    # events = events_result.get('items', [])
 
     try:
         service = build('calendar', 'v3', credentials=credentials)
@@ -266,13 +242,25 @@ def dashboard():
     except RefreshError:
         return redirect(url_for('index'))  # Redirect to index if credentials need to be refreshed
 
-    # # Calculate the average score for events in the current week
-    # average_score = calculate_average_score(events)
 
-    # # Get Google Calendar URL
-    # google_calendar_url = get_google_calendar_url(credentials)
+@app.route('/set_goal', methods=['POST'])
+def set_goal():
+    email = session.get('email')  # Assuming the email is stored in session after login
+    goal = request.form.get('goal')
+    end_date = request.form.get('endDate')
+    start_time = request.form.get('startTime')
+    end_time = request.form.get('endTime')
+    days = request.form.getlist('days')
 
-    # return render_template('dashboard.html', google_calendar_url=google_calendar_url, average_score=average_score)
+    # Convert days list to a comma-separated string
+    days_str = ','.join(days)
+
+    # Insert the goal into the database
+    g.db.execute('INSERT INTO goals (email, goal, end_date, start_time, end_time, days) VALUES (?, ?, ?, ?, ?, ?)',
+                 (email, goal, end_date, start_time, end_time, days_str))
+    g.db.commit()
+
+    return redirect(url_for('dashboard')) 
 
 
 if __name__ == '__main__':
