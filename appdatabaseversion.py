@@ -6,60 +6,65 @@ from googleapiclient.discovery import build
 from datetime import datetime, timedelta
 import json
 from google.oauth2.credentials import Credentials
-import logging
-from goalsetting import sorting_days
 from calculations import calculate_average_score
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
+import os
+import pickle
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
 conn = sqlite3.connect('data.db')
 c = conn.cursor()
-email = ''
 
 # Create table if not exists
-c.execute('''CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                email TEXT,
-                scheduling TEXT,
-                mental_health TEXT,
-                large_parties NUMBER,
-                networking_events NUMBER,
-                friends_familiar NUMBER,
-                zoom_meetings NUMBER,
-                in_person_meetings NUMBER,
-                lectures NUMBER,
-                seminar_classes NUMBER,
-                homework NUMBER,
-                extra_activities NUMBER,
-                working_out NUMBER,
-                procrastinating NUMBER,
-                sleep_hours_req NUMBER,
-                sleep_hours_reg NUMBER,
-                sleep TEXT,
-                naps TEXT,
-                activeness NUMBER,
-                meditation TEXT,
-                health_issues TEXT,
-                dietary TEXT,
-                caffeine TEXT,
-                coffee NUMBER,
-                drugs TEXT
-            )
-        ''')
+try:
+    c.execute('''CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    email TEXT,
+                    scheduling TEXT,
+                    mental_health TEXT,
+                    large_parties NUMBER,
+                    networking_events NUMBER,
+                    friends_familiar NUMBER,
+                    zoom_meetings NUMBER,
+                    in_person_meetings NUMBER,
+                    lectures NUMBER,
+                    seminar_classes NUMBER,
+                    homework NUMBER,
+                    extra_activities NUMBER,
+                    working_out NUMBER,
+                    procrastinating NUMBER,
+                    sleep_hours_req NUMBER,
+                    sleep_hours_reg NUMBER,
+                    sleep TEXT,
+                    naps TEXT,
+                    activeness NUMBER,
+                    meditation TEXT,
+                    health_issues TEXT,
+                    dietary TEXT,
+                    caffeine TEXT,
+                    coffee NUMBER,
+                    drugs TEXT
+                )
+            ''')
 
 # Create table for goals if not exists
-c.execute('''CREATE TABLE IF NOT EXISTS goals (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                email TEXT,
-                goal TEXT,
-                end_date TEXT,
-                start_time TEXT,
-                end_time TEXT,
-                days TEXT
-            )
-        ''')
-conn.commit()
+    c.execute('''CREATE TABLE IF NOT EXISTS goals (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    email TEXT,
+                    goal TEXT,
+                    end_date TEXT,
+                    start_time TEXT,
+                    end_time TEXT,
+                    days TEXT
+                )
+            ''')
+
+    conn.commit()
+except Exception as e:
+    print("Error creating table:", e)
 
 scopes = [
     'openid',
@@ -81,6 +86,24 @@ def get_google_calendar_url(credentials):
     primary_calendar_id = next((item['id'] for item in calendar_list['items'] if item.get('primary')), None)
     return f"https://calendar.google.com/calendar/embed?src={primary_calendar_id}&mode=WEEK"
 
+def getting_creds():
+    creds = None
+    # The file token.pickle stores the user's access and refresh tokens, and is created automatically when the authorization flow completes for the first time.
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'WebClient/client_secret_131606957380-ps44nt6hrpul20q162mke20i1e260kv4.apps.googleusercontent.com.json', scopes)
+            creds = flow.run_local_server(port=5000)  # This starts the local server for authentication
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+    return creds
 
 @app.route('/')
 def index():
@@ -117,10 +140,10 @@ def login():
         'scopes': credentials_dict.get('scope')
     })
 
-    # Get user's email
-    service = build('oauth2', 'v2', credentials=credentials)
-    user_info = service.userinfo().get().execute()
-    session['email'] = user_info['email']  # Store email in session
+    creds = getting_creds()
+    service = build('calendar', 'v3', credentials=creds)
+    calendar_list_entry = service.calendarList().get(calendarId='primary').execute() 
+    session['email'] = calendar_list_entry['id']
 
     # Redirect to onboarding
     return redirect(url_for('onboarding'))
@@ -152,7 +175,7 @@ def onboarding():
     print("route:", request.method)
 
     if request.method == 'POST':
-        email = request.form.get('email')
+        email = session.get('email')
         scheduling = request.form.get('scheduling')
         mental_health = request.form.get('mentalHealth')
         large_parties = request.form['Party/Concert/Rave/Large Dinners etc']
@@ -189,7 +212,7 @@ def onboarding():
         return redirect(url_for('dashboard')) 
         
     return render_template('onboarding.html')
-    
+
 
 @app.route('/dashboard',  methods=['GET', 'POST'])
 def dashboard():
@@ -208,6 +231,43 @@ def dashboard():
         client_secret=credentials_info['client_secret'],
         scopes=credentials_info['scopes']
     )
+
+    creds = getting_creds()
+    service = build('calendar', 'v3', credentials=creds)
+
+
+    # SAMPLE EVENT BEING CREATED FOR PRACTICE
+    event = {
+        'summary': 'Sample Event',
+        'location': '123 Main St, Anytown, USA',
+        'description': 'A chance to meet with friends.',
+        'start': {
+            'dateTime': '2024-05-30T09:00:00-07:00',
+            'timeZone': 'America/Los_Angeles',
+        },
+        'end': {
+            'dateTime': '2024-05-30T17:00:00-07:00',
+            'timeZone': 'America/Los_Angeles',
+        },
+        'recurrence': [
+            'RRULE:FREQ=DAILY;COUNT=2'
+        ],
+        'attendees': [
+            {'email': 'friend1@example.com'},
+            {'email': 'friend2@example.com'},
+        ],
+        'reminders': {
+            'useDefault': False,
+            'overrides': [
+                {'method': 'email', 'minutes': 24 * 60},
+                {'method': 'popup', 'minutes': 10},
+            ],
+        },
+    }
+
+    # Call the Calendar API to create the event
+    event = service.events().insert(calendarId='primary', body=event).execute()
+    print('Event created: %s' % (event.get('htmlLink')))
 
     try:
         service = build('calendar', 'v3', credentials=credentials)
@@ -267,3 +327,5 @@ def set_goal():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
+
+conn.close()
