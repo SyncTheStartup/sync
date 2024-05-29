@@ -62,7 +62,9 @@ c.execute('''CREATE TABLE IF NOT EXISTS goals (
 conn.commit()
 
 scopes = [
-    'https://www.googleapis.com/auth/calendar'
+    'openid',
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/userinfo.email'
 ]
 
 # Define the flow globally
