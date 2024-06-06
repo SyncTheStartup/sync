@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, jsonify
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from datetime import datetime, timedelta
@@ -61,8 +61,10 @@ def login():
     # Redirect to onboarding
     return redirect(url_for('onboarding'))
 
-@app.route('/onboarding')
+@app.route('/onboarding', methods=['GET', 'POST'])
 def onboarding():
+    if request.method =='POST':
+        return redirect(url_for('batterypage'))
     # Render the onboarding page
     return render_template('onboarding.html')
 
@@ -95,6 +97,15 @@ def dashboard():
     google_calendar_url = get_google_calendar_url(credentials)
 
     return render_template('dashboard.html', google_calendar_url=google_calendar_url, average_score=average_score)
+@app.route('/batterypage') 
+def batterypage():
+    return render_template('batteryDisplay.html')
+@app.route('/battery')
+def battery():
+    battery_level = 80
+    print(f"Battery level requested, returning {battery_level}%")
+    return jsonify(level=battery_level)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
+
