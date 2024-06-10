@@ -185,7 +185,7 @@ def categorize_event_into_12(event_name):
 @app.route('/initialbattery')
 def initialBattery():
     sleepNeeded = 8
-    sleepRegular = 6
+    sleepRegular = 7
 
     if (sleepNeeded - sleepRegular) <= 0:
         batteryLevel = 100
@@ -249,8 +249,8 @@ def battery():
 
                 category_map = {
                     "partyNum": 2,
-                    "networking": 3,
-                    "friend": 3,
+                    "networking": 2,
+                    "friend": 4,
                     "newPeople": 4,
                     "zoomVirtual": 5,
                     "inPerson": 1,
@@ -278,8 +278,10 @@ def battery():
                 eventDrain = multiplier * event_value * event_duration_hours
 
                 logging.debug(f"Event drain: {eventDrain}")
-
-                batteryLevel = max(0, batteryLevel + eventDrain)
+                if(batteryLevel+eventDrain>100):
+                    batteryLevel = 100
+                else:
+                    batteryLevel = max(0, batteryLevel + eventDrain)
 
                 logging.debug(f"Updated battery level: {batteryLevel}")
 
