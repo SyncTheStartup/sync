@@ -8,10 +8,13 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center; /* Center align the content */
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
         }
         #calendar {
             max-width: 800px;
-            margin: 0 auto;
+            margin: 20px auto; /* Add top margin */
         }
         iframe {
             border: 0;
@@ -19,27 +22,54 @@
             height: 600px; /* Adjust height as needed */
         }
         .battery-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            margin-bottom: 20px; /* Add some space below the battery */
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000; 
         }
         .battery {
-            width: 100px; /* Adjust battery size */
-            height: 40px;
-            border: 1px solid black;
+            width: 50px; /* Adjust battery size */
+            height: 100px;
+            border: 2px solid black;
             position: relative;
-            margin-right: 10px; /* Add some space between battery and iframe */
+            background-color: #fff;
+            margin-bottom: 10px;
+        }
+        .battery::before {
+            content: '';
+            width: 18px;
+            height: 10px;
+            background-color: #000;
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
         }
         .battery-level {
+            width: 100%;
             height: 100%;
-            background-color: #4CAF50; /* Green */
+            background-color: #4CAF50; 
             position: absolute;
             bottom: 0;
-            left: 0; /* Align to left */
+            left: 0; 
+            transition: height 0.5s;
         }
-        .average-score {
-            margin-top: 10px; /* Add space between battery and score */
+        .percentage {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .average-score-container {
+            margin-top: 20px;
+            font-size: 14px;
+            max-width: 800px;
+            margin: 20px auto;
         }
         .goal-button {
             margin-top: 20px; /* Add space above the button */
@@ -79,13 +109,19 @@
     </style>
 </head>
 <body>
-    <h1>Your Calendar</h1>
     <div class="battery-container">
         <div class="battery">
-            <div class="battery-level" style="width: {{ 100 - average_score }}%;"></div>
+            <div class="battery-level" id="battery-level"></div>
         </div>
-        <span class="average-score">Average Score for Current Week: {{ average_score }}</span>
-    <iframe src="{{ google_calendar_url }}" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+        <div class="percentage" id="percentage"></div>
+    </div>
+    <h1>Your Calendar</h1>
+    <div id="calendar">
+        <iframe src="{{ google_calendar_url }}" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+    </div>
+    <div class="average-score-container">
+        <span>Average Score for Current Week: {{ average_score }}</span>
+    </div>
 
     <button class="goal-button" onclick="openGoalPopup()">Set a Goal</button>
 
@@ -142,14 +178,61 @@
     </div>
     
     <script>
+        let currentBatteryLevel = 100;
+
+        async function getInitialBattery() {
+            try {
+                const response = await fetch('/initialbattery');
+                const data = await response.json();
+                if (data.level !== undefined) {
+                    currentBatteryLevel = data.level;
+                    updateBatteryDisplay(data.level);
+                } else {
+                    console.error('Initial battery level is undefined in the response:', data);
+                }
+            } catch (error) {
+                console.error('Error getting initial battery:', error); 
+            }
+        }
+
+        async function updateBattery() {
+            try {
+                const response = await fetch('/battery', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ battery: currentBatteryLevel })
+                });
+                const data = await response.json();
+                if (data.level !== undefined) {
+                    currentBatteryLevel = data.level;
+                    updateBatteryDisplay(data.level);
+                } else {
+                    console.error('Battery level is undefined in the response:', data);
+                }
+            } catch (error) {
+                console.error('Error updating battery:', error); 
+            }
+        }
+
+        function updateBatteryDisplay(level) {
+            const batteryLevel = document.getElementById('battery-level');
+            const percentage = document.getElementById('percentage');
+            batteryLevel.style.height = level + '%';
+            percentage.textContent = level + '%';
+        }
+
+        getInitialBattery();
+        setInterval(updateBattery, 5000);  
+
         function openGoalPopup() {
             document.getElementById("goalPopup").style.display = "flex";
         }
-        
+
         function closeGoalPopup() {
             document.getElementById("goalPopup").style.display = "none";
         }
     </script>
-
 </body>
 </html>
